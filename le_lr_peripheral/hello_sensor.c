@@ -237,7 +237,7 @@ wiced_result_t hello_sensor_management_callback(wiced_bt_management_evt_t event,
     case BTM_PAIRING_COMPLETE_EVT:
         p_info = &p_event_data->pairing_complete.pairing_complete_info.ble;
         printf("Hello sensor, Pairing Complete Reason: %s \n",
-                       get_bt_smp_status_name((wiced_bt_smp_status_t)p_info->reason));
+               get_bt_smp_status_name((wiced_bt_smp_status_t)p_info->reason));
         hello_sensor_smp_bond_result(p_info->reason);
         break;
 
@@ -328,17 +328,17 @@ wiced_result_t hello_sensor_management_callback(wiced_bt_management_evt_t event,
 
     case BTM_BLE_CONNECTION_PARAM_UPDATE:
         printf("Connection parameter update status:%d, Connection Interval: %d, Connection Latency: %d, Connection Timeout: %d\n",
-                       p_event_data->ble_connection_param_update.status,
-                       p_event_data->ble_connection_param_update.conn_interval,
-                       p_event_data->ble_connection_param_update.conn_latency,
-                       p_event_data->ble_connection_param_update.supervision_timeout);
+               p_event_data->ble_connection_param_update.status,
+               p_event_data->ble_connection_param_update.conn_interval,
+               p_event_data->ble_connection_param_update.conn_latency,
+               p_event_data->ble_connection_param_update.supervision_timeout);
         break;
 
     case BTM_BLE_PHY_UPDATE_EVT:
 
         printf("Selected TX PHY - %dM\n Selected RX PHY - %dM\n",
-                       p_event_data->ble_phy_update_event.tx_phy,
-                       p_event_data->ble_phy_update_event.rx_phy);
+               p_event_data->ble_phy_update_event.tx_phy,
+               p_event_data->ble_phy_update_event.rx_phy);
         break;
 
     default:
@@ -1156,7 +1156,7 @@ static wiced_bt_gatt_status_t hello_sensor_gatt_req_read_by_type_handler(uint16_
     if (0 == used_len)
     {
         printf("attr not found  start_handle: 0x%04x  end_handle: 0x%04x  Type: 0x%04x\n",
-                       p_read_req->s_handle, p_read_req->e_handle, p_read_req->uuid.uu.uuid16);
+               p_read_req->s_handle, p_read_req->e_handle, p_read_req->uuid.uu.uuid16);
         wiced_bt_gatt_server_send_error_rsp(conn_id, opcode, p_read_req->s_handle, WICED_BT_GATT_INVALID_HANDLE);
         hello_sensor_free_buffer(p_rsp);
         return WICED_BT_GATT_INVALID_HANDLE;
@@ -1257,7 +1257,7 @@ void hello_sensor_timeout(TimerHandle_t timer_handle)
     if (hello_sensor_state.timer_count % 10 == 0)
     {
         printf("hello_sensor_timeout: %ld, ft:%ld\n",
-                       (unsigned long)hello_sensor_state.timer_count, (unsigned long)hello_sensor_state.fine_timer_count);
+               (unsigned long)hello_sensor_state.timer_count, (unsigned long)hello_sensor_state.fine_timer_count);
 
         /*
          * If connection up,
@@ -1346,12 +1346,53 @@ void hello_sensor_gatts_increment_notify_value(void)
     app_hello_sensor_notify[last_byte] = c;
 }
 
+#define opcode_vsc_set_s_8_ext_adv 0x01B7
+
+/*******************************************************************************
+ * Function Name: set_s_8_ext_adv
+ ********************************************************************************
+ * Summary:
+ * Send Vendor Specific Command to use S=8 coded PHY for extended advertisement
+ *
+ * Parameters:
+ *  None
+ *
+ * Return
+ *  wiced_bt_dev_status_t  Result from BT_RESULT_LIST
+ *
+ *******************************************************************************/
+wiced_bt_dev_status_t set_s_8_ext_adv(void)
+{
+    wiced_bt_dev_status_t bt_status = WICED_BT_ERROR;
+    uint8_t buffer[] = {0x06, 0x04, 0x0A, 0x1E, 0x01, 0x00, 0xB5, 0x06, 0x01};
+
+    bt_status = wiced_bt_dev_vendor_specific_command(opcode_vsc_set_s_8_ext_adv, sizeof(buffer), buffer, NULL);
+    if (bt_status != WICED_BT_PENDING)
+    {
+        return bt_status;
+    }
+
+    return WICED_BT_SUCCESS;
+}
+
+/*******************************************************************************
+ * Function Name: user_button_interrupt_handler
+ ********************************************************************************
+ * Summary:
+ * Handler for User Button Interrupt.
+ * If Hello Sensor is connected, switch coding algorithms. Else, start advertising.
+ *
+ * Parameters:
+ *  None
+ *
+ * Return
+ *  None
+ *
+ *******************************************************************************/
 static void user_button_interrupt_handler(void)
 {
     printf("button pressed\n");
 
-    // if connected, switch coding algorithms
-    // else, start advertising
     if (hello_sensor_state.conn_id)
     {
         wiced_bt_ble_phy_preferences_t phy_pref = {0};
@@ -1364,12 +1405,16 @@ static void user_button_interrupt_handler(void)
         wiced_bt_ble_set_phy(&phy_pref);
 
         printf("Switching for LE LR PHY coding [is_s8_coding_active : %d] \n",
-                       hello_sensor_state.is_s8_coding_active);
+               hello_sensor_state.is_s8_coding_active);
         hello_sensor_state.is_s8_coding_active ^= 1;
     }
     else
     {
         printf("Starting Adv\n");
+
+#ifdef USE_S_8_FOR_ADV
+        set_s_8_ext_adv();
+#endif
 
         /* Set the advertising params and make the device discoverable */
         hello_sensor_start_extended_adv();

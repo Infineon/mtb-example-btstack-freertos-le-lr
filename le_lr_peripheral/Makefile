@@ -52,7 +52,6 @@ TOOLCHAIN=GCC_ARM
 # Debug -- build with minimal optimizations, focus on debugging.
 # Release -- build with full optimizations
 # Custom -- build with custom configuration, set the optimization flag in CFLAGS
-
 CONFIG=Debug
 
 # If set to "true" or "1", display full command-lines when building.
@@ -62,6 +61,12 @@ VERBOSE=
 ENABLE_SPY_TRACES?=0
 ifeq ($(ENABLE_SPY_TRACES),1)
 DEFINES+=ENABLE_BT_SPY_LOG DEBUG_UART_BAUDRATE=3000000
+endif
+
+# Start adv using S=8 by default
+USE_S_8_FOR_ADV?=1
+ifeq ($(USE_S_8_FOR_ADV),1)
+DEFINES+=USE_S_8_FOR_ADV
 endif
 
 ################################################################################

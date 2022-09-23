@@ -10,7 +10,7 @@ This code example has two applications:
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-btstack-freertos-le-lr)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzU5NzkiLCJTcGVjIE51bWJlciI6IjAwMi0zNTk3OSIsIkRvYyBUaXRsZSI6IkFJUk9DJnRyYWRlOyBCbHVldG9vdGgmcmVnOyBMRSBMb25nIFJhbmdlIFBIWSIsInJpZCI6InNyZXAiLCJEb2MgdmVyc2lvbiI6IjEuMC4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJCVEFCTEUifQ==)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzU5NzkiLCJTcGVjIE51bWJlciI6IjAwMi0zNTk3OSIsIkRvYyBUaXRsZSI6IkFJUk9DJnRyYWRlOyBCbHVldG9vdGgmcmVnOyBMRSBMb25nIFJhbmdlIFBIWSIsInJpZCI6InNyZXAiLCJEb2MgdmVyc2lvbiI6IjEuMS4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJCVEFCTEUifQ==)
 
 ## Requirements
 
@@ -293,6 +293,7 @@ Document title: *CE235979* – *AIROC&trade; Bluetooth&reg; LE Long Range PHY*
 Revision | Description of change
 -------  | ---------------------
 1.0.0    | New code example
+1.1.0    | Enabled S=8 PHY coding for extended advertisement as default
 
 ---------------------------------------------------------
 
